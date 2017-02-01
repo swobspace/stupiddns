@@ -2,6 +2,9 @@
 
 require 'rubydns'
 require 'yaml'
+require 'logger'
+
+logger = Logger.new('log/requests.log', 'weekly')
 
 CONFIG = YAML.load_file('config/application.yml') || {}
 puts CONFIG.inspect
@@ -12,6 +15,7 @@ IN = Resolv::DNS::Resource::IN
 
 RubyDNS::run_server(:listen => INTERFACES) do
     match(/.*/, IN::A) do |transaction|
+        logger.info { "#{transaction.options[:peer].to_s} question: #{transaction.question.to_s}" }
         transaction.respond!(ANSWER_IP)
     end
 
