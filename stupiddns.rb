@@ -6,6 +6,8 @@ require 'logger'
 
 logger = Logger.new('log/requests.log', 'weekly')
 
+TTL = 60
+
 CONFIG = YAML.load_file('config/application.yml') || {}
 puts CONFIG.inspect
 INTERFACES = CONFIG['interfaces'] || raise(ArgumentError, "Interfaces not configured")
@@ -16,7 +18,7 @@ IN = Resolv::DNS::Resource::IN
 RubyDNS::run_server(:listen => INTERFACES) do
     match(/.*/, IN::A) do |transaction|
         logger.info { "#{transaction.options[:peer].to_s} question: #{transaction.question.to_s}" }
-        transaction.respond!(ANSWER_IP)
+        transaction.respond!(ANSWER_IP, ttl: TTL)
     end
 
     # Default DNS handler
