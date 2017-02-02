@@ -61,13 +61,13 @@ RubyDNS::run_server(:listen => INTERFACES) do
   match(/.*/, IN::SOA) do |transaction|
     logme(transaction)
     transaction.respond!(
-      Name.create("ns00.#{transaction.question.to_s}"),    # Master Name
+      Name.create("ns00.#{transaction.question.to_s}"),   # Master Name
       Name.create("admin.#{transaction.question.to_s}."), # Responsible Name
-      File.mtime(__FILE__).to_i,          # Serial Number
-      1200,                               # Refresh Time
-      60,                                 # Retry Time
-      3600000,                            # Maximum TTL / Expiry Time
-      172800,                             # Minimum TTL
+      File.mtime(__FILE__).to_i, # Serial Number
+      1200,                      # Refresh Time
+      60,                        # Retry Time
+      3600,                      # Maximum TTL / Expiry Time
+      60,                        # Minimum TTL
       ttl: 60
     )
     transaction.append!(transaction.question, IN::NS, :section => :authority)
