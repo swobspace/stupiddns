@@ -50,7 +50,7 @@ RubyDNS::run_server(:listen => INTERFACES) do
 
   match(/.*/, IN::NS) do |transaction|
     logme(transaction)
-    transaction.respond!(transaction.question, ttl: TTL)
+    transaction.respond!(Name.create("ns00.#{transaction.question.to_s}"), ttl: TTL)
   end
 
   match(/.*/, IN::SRV) do |transaction|
@@ -61,7 +61,7 @@ RubyDNS::run_server(:listen => INTERFACES) do
   match(/.*/, IN::SOA) do |transaction|
     logme(transaction)
     transaction.respond!(
-      Name.create("ns.#{transaction.question.to_s}"),    # Master Name
+      Name.create("ns00.#{transaction.question.to_s}"),    # Master Name
       Name.create("admin.#{transaction.question.to_s}."), # Responsible Name
       File.mtime(__FILE__).to_i,          # Serial Number
       1200,                               # Refresh Time
