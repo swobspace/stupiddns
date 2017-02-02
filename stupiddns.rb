@@ -53,6 +53,11 @@ RubyDNS::run_server(:listen => INTERFACES) do
     transaction.respond!(["example", "com"], ttl: TTL)
   end
 
+  match(/.*/, IN::SRV) do |transaction|
+    logme(transaction)
+    transaction.respond!(10, 0, 1024, transaction.question, ttl: TTL)
+  end
+
   match(/.*/, IN::SOA) do |transaction|
     logme(transaction)
     transaction.respond!(
