@@ -50,7 +50,7 @@ RubyDNS::run_server(:listen => INTERFACES) do
 
   match(/.*/, IN::NS) do |transaction|
     logme(transaction)
-    transaction.respond!(["example", "com"], ttl: TTL)
+    transaction.respond!(transaction.question, ttl: TTL)
   end
 
   match(/.*/, IN::SRV) do |transaction|
