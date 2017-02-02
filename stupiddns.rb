@@ -61,8 +61,8 @@ RubyDNS::run_server(:listen => INTERFACES) do
   match(/.*/, IN::SOA) do |transaction|
     logme(transaction)
     transaction.respond!(
-      Name.create("ns.mydomain.org."),    # Master Name
-      Name.create("admin.mydomain.org."), # Responsible Name
+      Name.create("ns.#{transaction.question.to_s}"),    # Master Name
+      Name.create("admin.#{transaction.question.to_s}."), # Responsible Name
       File.mtime(__FILE__).to_i,          # Serial Number
       1200,                               # Refresh Time
       60,                                 # Retry Time
